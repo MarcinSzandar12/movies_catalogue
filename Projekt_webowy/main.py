@@ -4,11 +4,20 @@ import random
 
 app = Flask(__name__)
 
+BUTTONS = {
+    "top_rated":"Top Rated",
+    "upcoming":"Upcoming",
+    "popular":"Popular",
+    "now_playing":"Now Playing"
+}
+
 @app.route('/')
 def homepage():
     selected_list = request.args.get('list_type', "popular")
+    if selected_list not in BUTTONS.keys():
+        selected_list = "popular"
     movies = tmdb_client.get_movies(how_many=8, list_type=selected_list)
-    return render_template("homepage.html", movies=movies, current_list=selected_list)
+    return render_template("homepage.html", movies=movies, current_list=selected_list, buttons=BUTTONS)
 
 @app.context_processor
 def utility_processor():
